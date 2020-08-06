@@ -105,6 +105,8 @@ $(function() {
       console.log("OK, DOWNLOADING YOUR ATTENDANCE CSV");
       console.log("ALL PRESENT: " + String(present_list));
       console.log("ALL ABSENT: " + String(absent_list));
+      exportToCsv();
+
     } else {
       alert("Fill out all everyone's attendance first");
       exportToCsv();
