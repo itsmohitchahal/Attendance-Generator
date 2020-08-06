@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Attendance Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="master.css">
+  </head>
+  <body>
+
+
+    <div class="container">
+      <h1>Attendance Generator</h1>
+      <hr>
+      <div>
+        Please upload the spreadsheet with list of all students next to their names
+      </div>
+      <div>
+          <label for="pre-file">Select the file:</label>
+          <input type="file" name="preFile" id="pre-file">
+          <button class = "btn btn-info" type="button" name="button" id="pre-button">Ok</button>
+      </div>
+      <div class="attendance-data" id="dvCSV">
+      </div>
+      <div id="export" class="display-block">
+        <button class="btn btn-primary">Download attendance (As PDF)</button>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+    <script src="main.js" defer></script>
+
+  </body>
+</html>

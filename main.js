@@ -1,0 +1,144 @@
+document.querySelector("button").addEventListener("click", function(event) {
+  var prefile = document.getElementById("pre-file")
+  Upload(prefile);
+  event.preventDefault();
+}, false);
+
+var present_list = [];
+var absent_list = [];
+var data_of_data = [];
+var export_data = [];
+var TOTAL_STUDENTS = 0;
+
+function Upload() {
+  var fileUpload = document.getElementById("pre-file");
+  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+
+  if (regex.test(fileUpload.value.toLowerCase())) {
+    if (typeof (FileReader) != "undefined") {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var table = document.createElement("table");
+        table.className = "table";
+
+        var rows = e.target.result.split("\n");
+        TOTAL_STUDENTS = rows.length;
+        for (var i = 0; i < rows.length; i++) {
+
+          var row = table.insertRow(-1);
+          var cells = rows[i].split(",");
+          row.id = cells[1];
+          data_of_data.push(cells);
+
+          for (var j = 0; j < cells.length; j++) {
+            var cell = row.insertCell(-1);
+            cell.innerHTML = cells[j];
+          }
+        var butt1 = document.createElement("button")
+        butt1.innerHTML = "P";
+        var butt2 = document.createElement("button")
+        butt2.innerHTML = "A"
+        butt1.className = "btn btn-success";
+        butt2.className = "btn btn-danger";
+        var cell = row.insertCell(-1);
+        cell.appendChild(butt1);
+        cell.appendChild(butt2);
+        }
+
+        var dvCSV = document.getElementById("dvCSV");
+        dvCSV.innerHTML = "";
+        dvCSV.appendChild(table);
+
+      }
+      generateAttendance();
+      $("#export").toggleClass("display-block");
+
+      reader.readAsText(fileUpload.files[0]);
+
+    } else {
+        alert("This browser does not support HTML5.");
+      }
+  } else {
+  alert("Please upload a valid CSV file.");
+  }
+}
+
+
+function generateAttendance() {
+  $(document).ready(function(){
+    $('#dvCSV').on('click', 'button', function() {
+      var classList = $(this).attr('class').split(' ');
+      var butt_clck = $(this);
+      $.each(classList, function(index, item) {
+        var roll_no = butt_clck.parent().parent().attr('id')
+        if (item === 'btn-success' && checkRepeat(roll_no, present_list)) {
+          present_list.push(roll_no);
+          if (!checkRepeat(roll_no, absent_list)) {
+            var index = absent_list.indexOf(roll_no);
+            absent_list.splice(index, 1);
+            butt_clck.parent().parent().removeClass("text-danger")
+          }
+          butt_clck.parent().parent().addClass("text-success");
+          console.log("Present");
+          console.log(present_list);
+            //do something
+        } else if (item === 'btn-danger' && checkRepeat(roll_no, absent_list)) {
+          absent_list.push(roll_no);
+          if (!checkRepeat(roll_no, present_list)) {
+            var index = present_list.indexOf(roll_no);
+            present_list.splice(index, 1);
+            console.log('removed present');
+            butt_clck.parent().parent().removeClass("text-success")
+          }
+          butt_clck.parent().parent().addClass("text-danger");
+
+          console.log("Absentees");
+          console.log(absent_list);
+
+        }
+      });
+    });
+  });
+}
+
+$(function() {
+  $("#export").click(function() {
+    if (present_list.length + absent_list.length === TOTAL_STUDENTS) {
+      console.log("OK, DOWNLOADING YOUR ATTENDANCE CSV");
+      console.log("ALL PRESENT: " + String(present_list));
+      console.log("ALL ABSENT: " + String(absent_list));
+    } else {
+      alert("Fill out all everyone's attendance first");
+      exportToCsv();
+    }
+  });
+});
+
+function exportToCsv(){
+  var temp_present_list = present_list;
+
+  for (var i = 0; i < data_of_data.length; i++) {
+    for (var j = 0; j < temp_present_list.length; j++) {
+      if (String(temp_present_list[j]) === String(data_of_data[i][1])) {
+        export_data.push(data_of_data[i]);
+      } else {
+        console.log(String(j) + " is absent tho");
+      }
+    }
+  }
+  console.log("Final LIST: ");
+  console.log(export_data);
+}
+
+
+
+function checkRepeat(roll_no, list) {
+  for (i = 0; i < list.length; i++) {
+    if (String(roll_no) === String(list[i])){
+      console.log("found em at " + roll_no);
+      return false;
+    }
+  }
+  console.log("next time bois at " + roll_no);
+  return true;
+}
