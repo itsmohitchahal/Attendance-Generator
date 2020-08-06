@@ -1,5 +1,5 @@
 document.querySelector("button").addEventListener("click", function(event) {
-  var prefile = document.getElementById("pre-file")
+  var prefile = document.getElementById("pre-file");
   Upload(prefile);
   event.preventDefault();
 }, false);
@@ -13,7 +13,6 @@ var TOTAL_STUDENTS = 0;
 function Upload() {
   var fileUpload = document.getElementById("pre-file");
   var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-
   if (regex.test(fileUpload.value.toLowerCase())) {
     if (typeof (FileReader) != "undefined") {
       var reader = new FileReader();
@@ -24,7 +23,6 @@ function Upload() {
         var rows = e.target.result.split("\n");
         TOTAL_STUDENTS = rows.length;
         for (var i = 0; i < rows.length; i++) {
-
           var row = table.insertRow(-1);
           var cells = rows[i].split(",");
           row.id = cells[1];
@@ -34,15 +32,15 @@ function Upload() {
             var cell = row.insertCell(-1);
             cell.innerHTML = cells[j];
           }
-        var butt1 = document.createElement("button")
-        butt1.innerHTML = "P";
-        var butt2 = document.createElement("button")
-        butt2.innerHTML = "A"
-        butt1.className = "btn btn-success";
-        butt2.className = "btn btn-danger";
-        var cell = row.insertCell(-1);
-        cell.appendChild(butt1);
-        cell.appendChild(butt2);
+          var butt1 = document.createElement("button");
+          butt1.innerHTML = "P";
+          var butt2 = document.createElement("button");
+          butt2.innerHTML = "A";
+          butt1.className = "btn btn-success";
+          butt2.className = "btn btn-danger";
+          var cell = row.insertCell(-1);
+          cell.appendChild(butt1);
+          cell.appendChild(butt2);
         }
 
         var dvCSV = document.getElementById("dvCSV");
@@ -128,6 +126,18 @@ function exportToCsv(){
   }
   console.log("Final LIST: ");
   console.log(export_data);
+  let csvContent = "data:text/csv;charset=utf-8,";
+  export_data.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+  });
+  var encodedUri = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "my_data.csv");
+  document.body.appendChild(link); // Required for FF
+
+  link.click();
 }
 
 
