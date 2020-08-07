@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Attendance Generator</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="master.css">
@@ -9,16 +10,44 @@
   <body>
 
 
+
     <div class="container">
-      <h1>Attendance Generator</h1>
+      <h1 class="text-center">Attendance Generator</h1>
       <hr>
-      <div>
-        Please upload the spreadsheet with list of all students next to their names
+      <div id="instructions">
+        <p>Welcome to the online Attendance Generator, made by <a href="#">Mohit Chahal</a>.</p>
+        <p>To use this web-app, you'll have to follow the following setps: <br />
+          <ol>
+            <li><a href="#">Upload/attach</a> your data file with names of all the students,
+               along with their roll numbers and related information you want
+               printed in the output attendance</li>
+            <li>Once your list is rendered on screen, click on <strong>P</strong>
+              or <strong>A</strong> to mark their present or absent respectively.</li>
+            <li>After having marked the attendance for the students, click on
+              the <strong>Export</strong> button to choose your desired output
+              format and download it.</li>
+          </ol>
+        </p>
+        <p>Get Started by choosing an Upload Mode from the list down below: </p>
+        <div class="row">
+          <button class = "btn btn-primary" type="button" id="g-sheets">
+            Google Sheets</button>
+          <button class = "btn btn-primary" type="button" id="csv-file">
+          [Offline] CSV File</button>
+          <button class = "btn btn-primary" type="button" id="xlsx-file">
+          [Offline] .xlsx File</button>
+        </div>
       </div>
-      <div>
+      <div id="g-sheets-options" class="display-block">
+        Google sheets link: bro
+      </div>
+      <div id="csv-options" class="display-block">
           <label for="pre-file">Select the file:</label>
           <input type="file" name="preFile" id="pre-file">
           <button class = "btn btn-info" type="button" name="button" id="pre-button">Ok</button>
+      </div>
+      <div id="xlsx-options" class="display-block">
+        Attach your xlsx file: bro
       </div>
       <div class="attendance-data" id="dvCSV">
       </div>
@@ -27,7 +56,7 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="main.js" defer></script>
 
   </body>
