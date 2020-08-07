@@ -1,8 +1,8 @@
-document.querySelector("button").addEventListener("click", function(event) {
+$("#pre-button").click(function(event) {
   var prefile = document.getElementById("pre-file");
   Upload(prefile);
   event.preventDefault();
-}, false);
+});
 
 var present_list = [];
 var absent_list = [];
@@ -106,7 +106,6 @@ $(function() {
       console.log("ALL PRESENT: " + String(present_list));
       console.log("ALL ABSENT: " + String(absent_list));
       exportToCsv();
-
     } else {
       alert("Fill out all everyone's attendance first");
       exportToCsv();
