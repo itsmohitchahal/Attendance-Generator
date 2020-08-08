@@ -4,6 +4,19 @@ $("#pre-button").click(function(event) {
   event.preventDefault();
 });
 
+$(document).ready(function () {
+  $("#options").on("click", "button", function() {
+    var selection = $(this).attr("id");
+    if (String(selection) == "g-sheets") {
+      // g-sheets input
+    } else if (String(selection) == "csv-file") {
+      // csv-input
+    } else if (String(selection) == "xlsx-file") {
+      // xlsx-input
+    }
+  });
+});
+
 var present_list = [];
 var absent_list = [];
 var data_of_data = [];
