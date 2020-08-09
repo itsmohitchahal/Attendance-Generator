@@ -12,6 +12,7 @@ $(document).ready(function () {
     } else if (String(selection) == "csv-file") {
       // csv-input
       $('#csv-options').toggleClass('display-block');
+      $('#pre-file').trigger('click');
     } else if (String(selection) == "xlsx-file") {
       // xlsx-input
     }
@@ -26,7 +27,7 @@ var TOTAL_STUDENTS = 0;
 
 function Upload() {
   var fileUpload = document.getElementById("pre-file");
-  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+  var regex = /(\,|\r?\n|\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^"\,\r\n]*))/;
   if (regex.test(fileUpload.value.toLowerCase())) {
     if (typeof (FileReader) != "undefined") {
       var reader = new FileReader();
@@ -36,23 +37,22 @@ function Upload() {
 
         var rows = e.target.result.split("\n");
         TOTAL_STUDENTS = rows.length;
-        for (var i = -1; i < rows.length; i++) {
-          if (i === -1) {
-            var row = table.insertRow(-1);
-            var cells = ["<b>Name</b>", "<b>Roll no</b>", "<b>Course</b>", "<b>Status</b>"];
-            row.id = "table-heading";
-          } else {
-            var row = table.insertRow(-1);
-            var cells = rows[i].split(",");
-            row.id = cells[1];
-            data_of_data.push(cells);
-          }
+        for (var i = 0; i < rows.length; i++) {
+          var row = table.insertRow(-1);
+          var cells = rows[i].split(",");
+          row.id = cells[1];
+          data_of_data.push(cells);
 
           for (var j = 0; j < cells.length; j++) {
             var cell = row.insertCell(-1);
-            cell.innerHTML = cells[j];
+            if (i === 0) {
+              cell.innerHTML = "<b>" + String(cells[j]) + "</b>";
+            } else {
+              cell.innerHTML = cells[j];
+
+            }
           }
-          if (i === -1) {
+          if (i === 0) {
             continue;
           }
           var butt1 = document.createElement("button");
@@ -81,7 +81,7 @@ function Upload() {
         alert("This browser does not support HTML5.");
       }
   } else {
-  alert("Please upload a valid CSV file.");
+    alert("Please upload a valid CSV file.");
   }
 }
 
