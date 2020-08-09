@@ -38,6 +38,7 @@
           [Offline] .xlsx File</button>
         </div>
       </div>
+      <br>
         <div id="g-sheets-options" class="display-block">
           Google sheets link: bro
         </div>
@@ -49,10 +50,18 @@
         <div id="xlsx-options" class="display-block">
           Attach your xlsx file: bro
         </div>
+        <br>
       <div class="attendance-data" id="dvCSV">
       </div>
-      <div id="export" class="display-block">
-        <button class="btn btn-primary">Download attendance (As PDF)</button>
+      <div id="export" class="display-block text-center">
+        <hr>
+        <h2>Export</h2>
+        <hr>
+        <p>Please choose the format in which you want to export the attendance</p>
+        <button id="export-csv" class="btn btn-primary">CSV</button>
+        <button id="export-pdf" class="btn btn-primary">PDF</button>
+        <button id="export-xlsx" class="btn btn-primary">XLSX (Excel File)</button>
+
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
