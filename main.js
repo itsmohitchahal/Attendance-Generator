@@ -11,6 +11,7 @@ $(document).ready(function () {
       // g-sheets input
     } else if (String(selection) == "csv-file") {
       // csv-input
+      $('#csv-options').toggleClass('display-block');
     } else if (String(selection) == "xlsx-file") {
       // xlsx-input
     }
@@ -35,15 +36,24 @@ function Upload() {
 
         var rows = e.target.result.split("\n");
         TOTAL_STUDENTS = rows.length;
-        for (var i = 0; i < rows.length; i++) {
-          var row = table.insertRow(-1);
-          var cells = rows[i].split(",");
-          row.id = cells[1];
-          data_of_data.push(cells);
+        for (var i = -1; i < rows.length; i++) {
+          if (i === -1) {
+            var row = table.insertRow(-1);
+            var cells = ["<b>Name</b>", "<b>Roll no</b>", "<b>Course</b>", "<b>Status</b>"];
+            row.id = "table-heading";
+          } else {
+            var row = table.insertRow(-1);
+            var cells = rows[i].split(",");
+            row.id = cells[1];
+            data_of_data.push(cells);
+          }
 
           for (var j = 0; j < cells.length; j++) {
             var cell = row.insertCell(-1);
             cell.innerHTML = cells[j];
+          }
+          if (i === -1) {
+            continue;
           }
           var butt1 = document.createElement("button");
           butt1.innerHTML = "P";
@@ -63,6 +73,7 @@ function Upload() {
       }
       generateAttendance();
       $("#export").toggleClass("display-block");
+      $('#csv-options').toggleClass('display-block');
 
       reader.readAsText(fileUpload.files[0]);
 
@@ -113,15 +124,21 @@ function generateAttendance() {
 }
 
 $(function() {
-  $("#export").click(function() {
+  $("#export").on('click', 'button', function() {
     if (present_list.length + absent_list.length === TOTAL_STUDENTS) {
       console.log("OK, DOWNLOADING YOUR ATTENDANCE CSV");
       console.log("ALL PRESENT: " + String(present_list));
       console.log("ALL ABSENT: " + String(absent_list));
-      exportToCsv();
     } else {
       alert("Fill out all everyone's attendance first");
+    }
+    var butt_id = $(this).attr('id');
+    if(butt_id === 'export-csv') {
       exportToCsv();
+    } else if (butt_id === 'export-pdf') {
+      //
+    } else if (butt_id === 'export-xlsx') {
+      //
     }
   });
 });
