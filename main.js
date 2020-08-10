@@ -136,9 +136,9 @@ $(function() {
     if(butt_id === 'export-csv') {
       exportToCsv();
     } else if (butt_id === 'export-pdf') {
-      //
+      // export to pdf (function yet to be implemented)
     } else if (butt_id === 'export-xlsx') {
-      //
+      // export to xlsx (function yet to be implemented)
     }
   });
 });
@@ -166,7 +166,7 @@ function exportToCsv(){
   var link = document.createElement("a");
   link.setAttribute("href", encodedUri);
   link.setAttribute("download", "my_data.csv");
-  document.body.appendChild(link); // Required for FF
+  document.body.appendChild(link);
 
   link.click();
 }
