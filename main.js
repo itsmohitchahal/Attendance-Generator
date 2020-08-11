@@ -1,9 +1,3 @@
-$("#pre-button").click(function(event) {
-  var prefile = document.getElementById("pre-file");
-  Upload(prefile);
-  event.preventDefault();
-});
-
 $(document).ready(function () {
   $("#options").on("click", "button", function() {
     var selection = $(this).attr("id");
@@ -11,10 +5,10 @@ $(document).ready(function () {
       // g-sheets input
     } else if (String(selection) == "csv-file") {
       // csv-input
-      $('#csv-options').toggleClass('display-block');
       $('#pre-file').trigger('click');
     } else if (String(selection) == "xlsx-file") {
       // xlsx-input
+      $('#pre-file').trigger('click');
     }
   });
 });
@@ -25,7 +19,7 @@ var data_of_data = [];
 var export_data = [];
 var TOTAL_STUDENTS = 0;
 
-function Upload() {
+function csvInput() {
   var fileUpload = document.getElementById("pre-file");
   var regex = /(\,|\r?\n|\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^"\,\r\n]*))/;
   if (regex.test(fileUpload.value.toLowerCase())) {
@@ -73,8 +67,9 @@ function Upload() {
 
       }
       generateAttendance();
-      $("#export").toggleClass("display-block");
-      $('#csv-options').toggleClass('display-block');
+      if ($("#export").hasClass("display-block")) {
+        $("#export").removeClass("display-block");
+      }
 
       reader.readAsText(fileUpload.files[0]);
 
@@ -146,7 +141,7 @@ $(function() {
 
 function exportToCsv(){
   var temp_present_list = present_list;
-
+  export_data.push(data_of_data[0]);
   for (var i = 0; i < data_of_data.length; i++) {
     for (var j = 0; j < temp_present_list.length; j++) {
       if (String(temp_present_list[j]) === String(data_of_data[i][1])) {
@@ -184,3 +179,94 @@ function checkRepeat(roll_no, list) {
   console.log("next time bois at " + roll_no);
   return true;
 }
+
+function excelUpload() {
+  console.log('haha');
+  //Reference the FileUpload element.
+  var fileUpload = document.getElementById("pre-file");
+
+  //Validate whether File is valid Excel file.
+  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+  if (regex.test(fileUpload.value.toLowerCase())) {
+    if (typeof (FileReader) != "undefined") {
+      var reader = new FileReader();
+
+      //For Browsers other than IE.
+      if (reader.readAsBinaryString) {
+          reader.onload = function (e) {
+            ProcessExcel(e.target.result);
+          };
+          reader.readAsBinaryString(fileUpload.files[0]);
+      } else {
+        //For IE Browser.
+        reader.onload = function (e) {
+          var data = "";
+          var bytes = new Uint8Array(e.target.result);
+          for (var i = 0; i < bytes.byteLength; i++) {
+            data += String.fromCharCode(bytes[i]);
+          }
+          ProcessExcel(data);
+        };
+        reader.readAsArrayBuffer(fileUpload.files[0]);
+      }
+    } else {
+        alert("This browser does not support HTML5.");
+    }
+  } else {
+      alert("Please upload a valid Excel file.");
+  }
+};
+
+function ProcessExcel(data) {
+  //Read the Excel File data.
+  var workbook = XLSX.read(data, {
+    type: 'binary'
+  });
+
+  //Fetch the name of First Sheet.
+  var firstSheet = workbook.SheetNames[0];
+
+  //Read all rows from First Sheet into an JSON array.
+  var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+  var keys = Object.keys(excelRows[0]);
+
+  //Create a HTML Table element.
+  var table = document.createElement("table");
+  table.className = "table";
+  table.border = "1";
+
+
+  var row = table.insertRow(-1);
+  for (var i = 0; i < keys.length; i++) {
+    var headerCell = document.createElement("TH");
+    headerCell.innerHTML = keys[i];
+    row.appendChild(headerCell);
+  }
+  row.insertCell(-1);
+
+
+
+  //Add the data rows from Excel file.
+  for (var i = 0; i < excelRows.length; i++) {
+    var row = table.insertRow(-1);
+    for (var j = 0; j < keys.length; j++) {
+      var cell = row.insertCell(-1);
+      console.log(keys);
+      cell.innerHTML = excelRows[i][keys[j]];
+    }
+
+    var butt1 = document.createElement("button");
+    butt1.innerHTML = "P";
+    var butt2 = document.createElement("button");
+    butt2.innerHTML = "A";
+    butt1.className = "btn btn-success";
+    butt2.className = "btn btn-danger";
+    var cell = row.insertCell(-1);
+    cell.appendChild(butt1);
+    cell.appendChild(butt2);
+  }
+
+  var dvExcel = document.getElementById("dvCSV");
+  dvExcel.innerHTML = "";
+  dvExcel.appendChild(table);
+};
