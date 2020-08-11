@@ -53,6 +53,7 @@ function Upload() {
             }
           }
           if (i === 0) {
+            var cell = row.insertCell(-1);
             continue;
           }
           var butt1 = document.createElement("button");
