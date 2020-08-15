@@ -1,13 +1,17 @@
+var FILE_MODE = "none";
 $(document).ready(function () {
   $("#options").on("click", "button", function() {
     var selection = $(this).attr("id");
     if (String(selection) == "g-sheets") {
       // g-sheets input
+      FILE_MODE = "gsheets";
     } else if (String(selection) == "csv-file") {
       // csv-input
+      FILE_MODE = "csv";
       $('#pre-file').trigger('click');
     } else if (String(selection) == "xlsx-file") {
       // xlsx-input
+      FILE_MODE = "excel";
       $('#pre-file').trigger('click');
     }
   });
@@ -18,6 +22,16 @@ var absent_list = [];
 var data_of_data = [];
 var export_data = [];
 var TOTAL_STUDENTS = 0;
+
+function fileInput() {
+  if (FILE_MODE === "gsheets") {
+    console.log('yo man, cant have that');
+  } else if (FILE_MODE === "csv") {
+    csvInput();
+  } else if (FILE_MODE === "excel") {
+    excelUpload();
+  }
+}
 
 function csvInput() {
   var fileUpload = document.getElementById("pre-file");
@@ -142,12 +156,12 @@ $(function() {
 function exportToCsv(){
   var temp_present_list = present_list;
   export_data.push(data_of_data[0]);
+  console.log("all people PRESENT:");
+  console.log(present_list);
   for (var i = 0; i < data_of_data.length; i++) {
     for (var j = 0; j < temp_present_list.length; j++) {
       if (String(temp_present_list[j]) === String(data_of_data[i][1])) {
         export_data.push(data_of_data[i]);
-      } else {
-        console.log(String(j) + " is absent tho");
       }
     }
   }
@@ -196,6 +210,10 @@ function excelUpload() {
           reader.onload = function (e) {
             ProcessExcel(e.target.result);
           };
+          generateAttendance();
+          if ($("#export").hasClass("display-block")) {
+            $("#export").removeClass("display-block");
+          }
           reader.readAsBinaryString(fileUpload.files[0]);
       } else {
         //For IE Browser.
@@ -207,6 +225,10 @@ function excelUpload() {
           }
           ProcessExcel(data);
         };
+        generateAttendance();
+        if ($("#export").hasClass("display-block")) {
+          $("#export").removeClass("display-block");
+        }
         reader.readAsArrayBuffer(fileUpload.files[0]);
       }
     } else {
@@ -228,12 +250,12 @@ function ProcessExcel(data) {
 
   //Read all rows from First Sheet into an JSON array.
   var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+  console.log(excelRows);
   var keys = Object.keys(excelRows[0]);
 
   //Create a HTML Table element.
   var table = document.createElement("table");
   table.className = "table";
-  table.border = "1";
 
 
   var row = table.insertRow(-1);
@@ -249,12 +271,18 @@ function ProcessExcel(data) {
   //Add the data rows from Excel file.
   for (var i = 0; i < excelRows.length; i++) {
     var row = table.insertRow(-1);
+    $(row).attr('id', String(excelRows[i][keys[1]]));
+    // console.log($(row).attr('id'));
+    var smol_list = []
+    // console.log(smol_list);
     for (var j = 0; j < keys.length; j++) {
       var cell = row.insertCell(-1);
-      console.log(keys);
+      // console.log(keys);
       cell.innerHTML = excelRows[i][keys[j]];
+      var elmnt = excelRows[i][keys[j]];
+      smol_list.push(elmnt);
     }
-
+    data_of_data.push(smol_list);
     var butt1 = document.createElement("button");
     butt1.innerHTML = "P";
     var butt2 = document.createElement("button");
@@ -265,6 +293,7 @@ function ProcessExcel(data) {
     cell.appendChild(butt1);
     cell.appendChild(butt2);
   }
+  // console.log(data_of_data);
 
   var dvExcel = document.getElementById("dvCSV");
   dvExcel.innerHTML = "";
